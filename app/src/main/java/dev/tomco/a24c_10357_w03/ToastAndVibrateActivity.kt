@@ -33,7 +33,6 @@ class ToastAndVibrateActivity : AppCompatActivity() {
         ImageLoader
             .getInstance()
             .load(
-
 //                ContextCompat.getDrawable(applicationContext,R.drawable.colosseum)!!, //Drawable
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Tel_Aviv_Port_Lowshot.jpg/1200px-Tel_Aviv_Port_Lowshot.jpg", //Link
                 tav_IMG_background,

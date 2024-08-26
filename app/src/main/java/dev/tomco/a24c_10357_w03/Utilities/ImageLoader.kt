@@ -7,20 +7,24 @@ import androidx.constraintlayout.widget.Placeholder
 import com.bumptech.glide.Glide
 import dev.tomco.a24c_10357_w03.R
 import dev.tomco.a24c_10357_w03.Utilities.SharedPreferencesManagerV3.Companion
+import java.lang.ref.WeakReference
 
-class ImageLoader private constructor(private val context: Context) {
+class ImageLoader private constructor(context: Context) {
+    private val contextRef = WeakReference(context)
 
     fun load(
         source: Drawable,
         imageView: ImageView,
         placeholder: Int = R.drawable.unavailable_photo
     ) {
-        Glide
-            .with(context)
-            .load(source)
-            .placeholder(placeholder)
-            .centerCrop()
-            .into(imageView)
+        contextRef.get()?.let { context ->
+            Glide
+                .with(context)
+                .load(source)
+                .placeholder(placeholder)
+                .centerCrop()
+                .into(imageView)
+        }
     }
 
     fun load(
@@ -28,12 +32,14 @@ class ImageLoader private constructor(private val context: Context) {
         imageView: ImageView,
         placeholder: Int = R.drawable.unavailable_photo
     ) {
-        Glide
-            .with(context)
-            .load(source)
-            .placeholder(placeholder)
-            .centerCrop()
-            .into(imageView)
+        contextRef.get()?.let { context ->
+            Glide
+                .with(context)
+                .load(source)
+                .placeholder(placeholder)
+                .centerCrop()
+                .into(imageView)
+        }
     }
 
     companion object {
@@ -42,6 +48,7 @@ class ImageLoader private constructor(private val context: Context) {
         private var instance: ImageLoader? = null
 
         fun init(context: Context): ImageLoader {
+
             return instance ?: synchronized(this) {
                 instance ?: ImageLoader(context).also { instance = it }
             }
