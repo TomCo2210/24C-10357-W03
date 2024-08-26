@@ -9,10 +9,13 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
+import dev.tomco.a24c_10357_w03.Utilities.ImageLoader
 
 class ToastAndVibrateActivity : AppCompatActivity() {
     private lateinit var tav_IMG_background: AppCompatImageView
@@ -27,13 +30,14 @@ class ToastAndVibrateActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        Glide
-            .with(this)
-//            .load(R.drawable.colosseum)
-            .load("https://static.toiimg.com/thumb/msid-79608505,width-748,height-499,resizemode=4,imgsize-1624884/.jpg")
-            .centerCrop()
-            .placeholder(R.drawable.ic_launcher_background)
-            .into(tav_IMG_background);
+        ImageLoader
+            .getInstance()
+            .load(
+                applicationContext,
+//                ContextCompat.getDrawable(applicationContext,R.drawable.colosseum)!!, //Drawable
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Tel_Aviv_Port_Lowshot.jpg/1200px-Tel_Aviv_Port_Lowshot.jpg", //Link
+                tav_IMG_background,
+                R.drawable.unavailable_photo)
         tav_BTN_tav.setOnClickListener { v -> toastAndVibrate("Hello Toast Message!") }
     }
 

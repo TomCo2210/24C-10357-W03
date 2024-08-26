@@ -1,18 +1,17 @@
 package dev.tomco.a24c_10357_w03
 
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textview.MaterialTextView
 import dev.tomco.a24c_10357_w03.Utilities.Constants
 import dev.tomco.a24c_10357_w03.Utilities.TimeFormatter
-import java.util.Timer
-import java.util.TimerTask
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class MainActivity3 : AppCompatActivity() {
+class KotlinCoroutinesActivity : AppCompatActivity() {
 
     private lateinit var main_LBL_time: MaterialTextView
     private lateinit var main_FAB_start: ExtendedFloatingActionButton
@@ -20,7 +19,8 @@ class MainActivity3 : AppCompatActivity() {
 
     private var startTime: Long = 0
     private var timerOn = false
-    private lateinit var countDownTimer: CountDownTimer
+
+    private lateinit var timerJob: Job
 
     private fun updateTimerUI() {
         val currentTime = System.currentTimeMillis()
@@ -29,7 +29,7 @@ class MainActivity3 : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_timer)
 
         findViews()
         initViews()
@@ -49,22 +49,19 @@ class MainActivity3 : AppCompatActivity() {
 
     private fun stopTimer() {
         timerOn = false
-        countDownTimer.cancel()
+        timerJob.cancel()
     }
 
     private fun startTimer() {
         if (!timerOn) {
-            timerOn = true
             startTime = System.currentTimeMillis()
-            countDownTimer = object :CountDownTimer(6000,Constants.DELAY){
-                override fun onTick(millisUntilFinished: Long) {
+            timerOn = true
+            timerJob = lifecycleScope.launch {
+                while (timerOn){
                     updateTimerUI()
+                    delay(Constants.DELAY)
                 }
-
-                override fun onFinish() {
-                    timerOn = false
-                }
-            }.start()
+            }
         }
     }
 }

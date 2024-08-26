@@ -1,17 +1,14 @@
 package dev.tomco.a24c_10357_w03
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.CountDownTimer
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textview.MaterialTextView
 import dev.tomco.a24c_10357_w03.Utilities.Constants
 import dev.tomco.a24c_10357_w03.Utilities.TimeFormatter
-import java.util.Timer
-import java.util.TimerTask
 
-class MainActivity2 : AppCompatActivity() {
+class CountdownTimerActivity : AppCompatActivity() {
 
     private lateinit var main_LBL_time: MaterialTextView
     private lateinit var main_FAB_start: ExtendedFloatingActionButton
@@ -19,7 +16,7 @@ class MainActivity2 : AppCompatActivity() {
 
     private var startTime: Long = 0
     private var timerOn = false
-    private lateinit var timer: Timer
+    private lateinit var countDownTimer: CountDownTimer
 
     private fun updateTimerUI() {
         val currentTime = System.currentTimeMillis()
@@ -28,7 +25,7 @@ class MainActivity2 : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_timer)
 
         findViews()
         initViews()
@@ -48,21 +45,22 @@ class MainActivity2 : AppCompatActivity() {
 
     private fun stopTimer() {
         timerOn = false
-        timer.cancel()
+        countDownTimer.cancel()
     }
 
     private fun startTimer() {
         if (!timerOn) {
             timerOn = true
             startTime = System.currentTimeMillis()
-            timer = Timer()
-            timer.schedule(object : TimerTask() {
-                override fun run() {
-                    runOnUiThread {
-                        updateTimerUI()
-                    }
+            countDownTimer = object :CountDownTimer(6000,Constants.DELAY){
+                override fun onTick(millisUntilFinished: Long) {
+                    updateTimerUI()
                 }
-            }, 0L, Constants.DELAY)
+
+                override fun onFinish() {
+                    timerOn = false
+                }
+            }.start()
         }
     }
 }

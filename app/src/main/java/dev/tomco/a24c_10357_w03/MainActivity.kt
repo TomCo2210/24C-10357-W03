@@ -1,68 +1,59 @@
 package dev.tomco.a24c_10357_w03
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.util.Log
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.textview.MaterialTextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.google.gson.Gson
+import dev.tomco.a24c_10357_w03.Models.Playlist
 import dev.tomco.a24c_10357_w03.Utilities.Constants
-import dev.tomco.a24c_10357_w03.Utilities.TimeFormatter
+import dev.tomco.a24c_10357_w03.Utilities.DataManager
+import dev.tomco.a24c_10357_w03.Utilities.SharedPreferencesManagerV1
+import dev.tomco.a24c_10357_w03.Utilities.SharedPreferencesManagerV2
+import dev.tomco.a24c_10357_w03.Utilities.SharedPreferencesManagerV3
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var main_LBL_time: MaterialTextView
-    private lateinit var main_FAB_start: ExtendedFloatingActionButton
-    private lateinit var main_FAB_stop: ExtendedFloatingActionButton
-
-    val handler: Handler = Handler(Looper.getMainLooper())
-    private var startTime: Long = 0
-    private var timerOn = false
-
-    val runnable: Runnable = object : Runnable {
-        override fun run() {
-            //reschedule
-            handler.postDelayed(this, Constants.DELAY)
-            //update ui
-            updateTimerUI()
-        }
-    }
-
-    private fun updateTimerUI() {
-        val currentTime = System.currentTimeMillis()
-        main_LBL_time.text = TimeFormatter.formatTime(currentTime - startTime)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViews()
-        initViews()
+        //create the playlist.
 
-    }
+        // val playlist: Playlist = DataManager.generatePlaylist()
+        val gson = Gson()
+        // val playlistAsJson: String = gson.toJson(playlist)
 
-    private fun findViews() {
-        main_LBL_time = findViewById(R.id.main_LBL_time)
-        main_FAB_start = findViewById(R.id.main_FAB_start)
-        main_FAB_stop = findViewById(R.id.main_FAB_stop)
-    }
+        // Log.d("playlistAsJson", "playlistAsJson: " + playlistAsJson)
 
-    private fun initViews() {
-        main_FAB_start.setOnClickListener { v -> startTimer() }
-        main_FAB_stop.setOnClickListener { v -> stopTimer() }
-    }
+        //SharedPreferencesManagerV1.putString(this, Constants.PLAYLIST_KEY, playlistAsJson)
 
-    private fun stopTimer() {
-        timerOn = false
-        handler.removeCallbacks(runnable)
-    }
+        //v2:
+        // val spmv2: SharedPreferencesManagerV2 = SharedPreferencesManagerV2(this)
+        // spmv2.putString(Constants.PLAYLIST_KEY, playlistAsJson)
 
-    private fun startTimer() {
-        if (!timerOn) {
-            startTime = System.currentTimeMillis()
-            handler.postDelayed(runnable, 0)
-            timerOn = true
-        }
+        //v3:
+        // SharedPreferencesManagerV3.getInstance().putString(Constants.PLAYLIST_KEY, playlistAsJson)
+
+        //read from shared preferences to String
+        //v1:
+        //val playlistFromSP = SharedPreferencesManagerV1.getString(this, Constants.PLAYLIST_KEY, "")
+        //Log.d("playlistFromSP", "playlistFromSP: " + playlistFromSP)
+
+
+        //v2:
+        // val playlistFromSP = spmv2.getString(Constants.PLAYLIST_KEY, "")
+        // Log.d("playlistFromSP", "playlistFromSP: " + playlistFromSP)
+
+        //v3:
+        val playlistFromSP = SharedPreferencesManagerV3
+            .getInstance()
+            .getString(Constants.PLAYLIST_KEY, "")
+        Log.d("playlistFromSP", "playlistFromSP: " + playlistFromSP)
+
+        val playlistObjFromSP: Playlist = gson.fromJson(playlistFromSP, Playlist::class.java)
+        Log.d("playlistObjFromSP", "playlistObjFromSP: " + playlistObjFromSP)
     }
 }

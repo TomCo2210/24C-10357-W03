@@ -1,19 +1,15 @@
 package dev.tomco.a24c_10357_w03
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textview.MaterialTextView
 import dev.tomco.a24c_10357_w03.Utilities.Constants
 import dev.tomco.a24c_10357_w03.Utilities.TimeFormatter
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import java.util.Timer
+import java.util.TimerTask
 
-class MainActivity4 : AppCompatActivity() {
+class TimerActivity : AppCompatActivity() {
 
     private lateinit var main_LBL_time: MaterialTextView
     private lateinit var main_FAB_start: ExtendedFloatingActionButton
@@ -21,8 +17,7 @@ class MainActivity4 : AppCompatActivity() {
 
     private var startTime: Long = 0
     private var timerOn = false
-
-    private lateinit var timerJob: Job
+    private lateinit var timer: Timer
 
     private fun updateTimerUI() {
         val currentTime = System.currentTimeMillis()
@@ -31,7 +26,7 @@ class MainActivity4 : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_timer)
 
         findViews()
         initViews()
@@ -51,19 +46,21 @@ class MainActivity4 : AppCompatActivity() {
 
     private fun stopTimer() {
         timerOn = false
-        timerJob.cancel()
+        timer.cancel()
     }
 
     private fun startTimer() {
         if (!timerOn) {
-            startTime = System.currentTimeMillis()
             timerOn = true
-            timerJob = lifecycleScope.launch {
-                while (timerOn){
-                    updateTimerUI()
-                    delay(Constants.DELAY)
+            startTime = System.currentTimeMillis()
+            timer = Timer()
+            timer.schedule(object : TimerTask() {
+                override fun run() {
+                    runOnUiThread {
+                        updateTimerUI()
+                    }
                 }
-            }
+            }, 0L, Constants.DELAY)
         }
     }
 }

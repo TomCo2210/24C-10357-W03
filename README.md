@@ -6,3 +6,11 @@
 * Glide - Loading External Source Images
 * Vibrations
 * Toasts
+
+* Shared Preferences - v1, v2, v3
+* Singleton DP
+* Builder DP
+* Gson + JSON
+* Application Context
+* Image Loader
+* Signal Manager
