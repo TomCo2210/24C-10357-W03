@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import dev.tomco.a24c_10357_w03.Utilities.ImageLoader
+import dev.tomco.a24c_10357_w03.Utilities.SignalManager
 
 class ToastAndVibrateActivity : AppCompatActivity() {
     private lateinit var tav_IMG_background: AppCompatImageView
@@ -41,63 +42,11 @@ class ToastAndVibrateActivity : AppCompatActivity() {
     }
 
     private fun toastAndVibrate(text: String) {
-        toast(text)
-        vibrate()
+        SignalManager.getInstance().toast(text)
+        SignalManager.getInstance().vibrate()
     }
 
-    private fun vibrate() {
-        val vibrator: Vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager =
-                this.getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibratorManager.defaultVibrator
-        } else {
-            this.getSystemService(VIBRATOR_SERVICE) as Vibrator
-        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val sosPattern = longArrayOf(
-                0,
-                200,
-                100,
-                200,
-                100,
-                200,
-                300,
-                500,
-                100,
-                500,
-                100,
-                500,
-                300,
-                200,
-                100,
-                200,
-                100,
-                200
-            )
-            val waveVibrationEffect = VibrationEffect.createWaveform(
-                sosPattern,
-                -1
-            )
-
-            val oneShotVibrationEffect = VibrationEffect.createOneShot(
-                500,
-                VibrationEffect.DEFAULT_AMPLITUDE
-            )
-            vibrator.vibrate(waveVibrationEffect)
-        } else {
-            vibrator.vibrate(500)
-        }
-    }
-
-    private fun toast(text: String) {
-        Toast
-            .makeText(
-                this,
-                text,
-                Toast.LENGTH_LONG
-            ).show()
-    }
 
     private fun findViews() {
         tav_IMG_background = findViewById(R.id.tav_IMG_background)

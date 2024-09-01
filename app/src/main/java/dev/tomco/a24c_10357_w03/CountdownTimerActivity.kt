@@ -52,7 +52,7 @@ class CountdownTimerActivity : AppCompatActivity() {
         if (!timerOn) {
             timerOn = true
             startTime = System.currentTimeMillis()
-            countDownTimer = object :CountDownTimer(6000,Constants.DELAY){
+            countDownTimer = object : CountDownTimer(6000, Constants.DELAY) {
                 override fun onTick(millisUntilFinished: Long) {
                     updateTimerUI()
                 }
